@@ -15,6 +15,16 @@ jobs:
   spark:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # para guardar el result
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+
+
+
+    
     steps:
     - uses: actions/checkout@v4
     - run: ls -la  
@@ -46,6 +56,23 @@ jobs:
     
     - run: spark-submit --master local hello.py
     - run: ls -la  
+
+
+
+    #automatizar con commit
+
+    - name: GIT commit and push docs
+      env: 
+        CI_COMMIT_MESSAGE: save spark results
+        CI_COMMIT_AUTHOR: CMillan21 # usuario de github
+      run: |
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "christianmanuelmillanpolito9@gmail.com" # correo de github
+        git add results
+        git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
+        git push
+
+
 
 
 
